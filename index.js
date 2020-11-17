@@ -8,7 +8,9 @@ artifactClient.downloadArtifact('environmentVars').then(result => {
 
     const environmentVars = JSON.parse(fs.readFileSync('./environmentVars.json'));
     for (let k in environmentVars) {
-        if (environmentVars.hasOwnProperty(k)) exec.exec('echo "'+ k + '=' + environmentVars[k] + '" >> $GITHUB_ENV') //core.exportVariable(k, environmentVars[k])
+        if (environmentVars.hasOwnProperty(k)) {
+            await exec.exec('echo "'+ k + '=' + environmentVars[k] + '" >> $GITHUB_ENV')
+        } //core.exportVariable(k, environmentVars[k])
     }
 
 }).catch(err => core.setFailed(err));
