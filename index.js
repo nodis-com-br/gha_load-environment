@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const exec = require('@actions/exec');
 const artifact = require('@actions/artifact');
 const fs = require('fs');
-
+const process = require('process');
 
 const artifactClient = artifact.create();
 artifactClient.downloadArtifact('environmentVars').then(result => {
@@ -11,9 +11,12 @@ artifactClient.downloadArtifact('environmentVars').then(result => {
     for (let k in environmentVars) {
         if (environmentVars.hasOwnProperty(k)) {
 
-            let value = k + '="' + environmentVars[k] + '"';
-            core.info(value);
-            exec.exec("echo '" + value + "' >> $GITHUB_ENV")
+            let val = k + '=' + environmentVars[k] + '';
+
+            fs.appendFileSync(process.env.GITHUB_ENV, val);
+
+            // core.info(val);
+            // exec.exec("echo '" + val + "' >> $GITHUB_ENV")
 
         } //core.exportVariable(k, environmentVars[k])
     }
